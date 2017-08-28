@@ -1,0 +1,6 @@
+.vagrant
+target
+.settings
+.project
+.classpath
+instrumented
