@@ -55,8 +55,6 @@ You'll also find that there is a test case pre-written for this step, in `edu.gm
 
 Implement `MethodProfilingMV` so that `ProfileLogger.methodHit(Ljava/lang/String;)V` is called whenever a method is entered. Once you get the existing tests to pass, add several more test methods in `MethodTraceIT` to test more complex functionality (like covering methods in different classes, and covering different methods with the same name but different parameters).
 
-Note: this ClassVisitor/MethodVisitor will be called for *every* class that's loaded (except java.* classes). If you add your instrumentation to *every* class, you'll end up with StackOverflow exceptions: for instance, if you call `ProfileLogger.methodHit` at the start of every method, including `ProfileLogger.methodHit`. For simplicity, you should *only* add instrumentation to classes starting with "edu.gmu.cs795.lab1.test" (this should prevent all of these issues).
-
 # Submitting your lab
 This lab will be graded on a pass/fail basis: if you try to do it _and you submit it_, you passed! Hence, it's important that you submit it. This will be good practice for Homework 1, too, since you will use the same submission mechanism.
 
