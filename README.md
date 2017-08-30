@@ -49,7 +49,7 @@ You'll find the interface for the recorder in `edu.gmu.cs795.lab1.ProfileLogger`
 
 You'll also find that there is a test case pre-written for this step, in `edu.gmu.cs795.lab1.test.MethodTraceIT`. When you run `mvn verify` from the command line, it will compile your instrumenter, and then run the test cases (endign it IT), using the `PreMain` to instrument every class file as its loaded. The `PreMain` class is configured to call your `PartOneCV`.
 
-Implement `PartOneMV` so that `ProfileLogger.methodHit(Ljava/lang/String;)V` is called whenever a method is entered. Once you get the existing tests to pass, add several more test methods in `MethodTraceIT` to test more complex functionality (like covering methods in different classes, and covering different methods with the same name but different parameters).
+Implement `MethodProfilingMV` so that `ProfileLogger.methodHit(Ljava/lang/String;)V` is called whenever a method is entered. Once you get the existing tests to pass, add several more test methods in `MethodTraceIT` to test more complex functionality (like covering methods in different classes, and covering different methods with the same name but different parameters).
 
 
 # Submitting your lab
