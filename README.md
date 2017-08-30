@@ -26,7 +26,9 @@ public void visitCode() {
 
 When you think you have the right place, confirm that you do, by adding a simple, 'no-operation' instruction there, which will not effect the program in any way, but will show up in the bytecode as `NOP`. To do this, add a call to `super.visitInsn(NOP)` at that point.
 
-After running the instrumenter and `javap`, the output here should be:
+Now, run the instrumenter. Recall that for this part of the lab, we will be running the `Main` class to instrument the code: it will read in the `SimpleClass.class` file, and write out an instrumented version of it. To run the instrumenter, compile the project (`mvn package`) then run `java -jar target/cs795-asm-lab1-0.0.1-SNAPSHOT.jar target/test-classes/SimpleClass.class`. When this completes, it will result in a new folder, `instrumented`, with a copy of `SimpleClass.class` in it.
+
+After running the instrumenter and `javap` on that newly instrumented file (`javap -verbose instrumented/SimpleClass.class`), the output here should be:
 
 ```
 0: getstatic     #19                 // Field java/lang/System.out:Ljava/io/PrintStream;
@@ -37,7 +39,7 @@ After running the instrumenter and `javap`, the output here should be:
 ```
 
 ### Inserting new code
-To insert the code to output "Hello, ASM!", use the output from the ASMifier in the previous step as a template, and change the words that are printed. When you are done, the output of the program should be "Hello, World!" followed by "Hello, ASM!" printed exactly once.
+To insert the code to output "Hello, ASM!", use the output from the ASMifier in the previous step as a template, and change the words that are printed. Then, run the instrumenter again. When you are done, the output of the program should be "Hello, World!" followed by "Hello, ASM!" printed exactly once.
 You can run the instrumented `SimpleClass` by running:
 `java -cp instrumented/ SimpleClass` on the command line.
 
@@ -47,15 +49,18 @@ Now that you have a very basic grasp of ASM, we're going to increase the complex
 
 You'll find the interface for the recorder in `edu.gmu.cs795.lab1.ProfileLogger`: the `methodHit` method is called from code, as methods are executed; the `dump` method is called from test code, to inspect what methods were called.
 
-You'll also find that there is a test case pre-written for this step, in `edu.gmu.cs795.lab1.test.MethodTraceIT`. When you run `mvn verify` from the command line, it will compile your instrumenter, and then run the test cases (endign it IT), using the `PreMain` to instrument every class file as its loaded. The `PreMain` class is configured to call your `PartOneCV`.
+You'll also find that there is a test case pre-written for this step, in `edu.gmu.cs795.lab1.test.MethodTraceIT`. When you run `mvn verify` from the command line, it will compile your instrumenter, and then run the test cases (endign it IT), using the `PreMain` to instrument every class file as its loaded. The `PreMain` class is configured to call your `MethodProfilingCV`. For this step, you should not run the `Main` instrumenter, or run `java -jar ...` anything: the whole thing is set up to run automatically with your tests, instrumenting them as necessary.
+
+(Note: when you first run `mvn verify` you'll get some message that a test failed. That's because I wrote a test for you to show you how this step should work. When you haven't implemented it, you will see that the test fails)
 
 Implement `MethodProfilingMV` so that `ProfileLogger.methodHit(Ljava/lang/String;)V` is called whenever a method is entered. Once you get the existing tests to pass, add several more test methods in `MethodTraceIT` to test more complex functionality (like covering methods in different classes, and covering different methods with the same name but different parameters).
 
+Note: this ClassVisitor/MethodVisitor will be called for *every* class that's loaded (except java.* classes). If you add your instrumentation to *every* class, you'll end up with StackOverflow exceptions: for instance, if you call `ProfileLogger.methodHit` at the start of every method, including `ProfileLogger.methodHit`. For simplicity, you should *only* add instrumentation to classes starting with "edu.gmu.cs795.lab1.test" (this should prevent all of these issues).
 
 # Submitting your lab
 This lab will be graded on a pass/fail basis: if you try to do it _and you submit it_, you passed! Hence, it's important that you submit it. This will be good practice for Homework 1, too, since you will use the same submission mechanism.
 
 To submit this lab:
-Perform all of your work in your lab-1 git repository. Commit and push your assignment. Once you are ready to submit, create a release, tagged “lab-1.” Unless you want to submit a different version of your code, leave it at “master” to release the most recent code that you’ve pushed to GitHub. Make sure that your name is specified somewhere in the release notes.
+Perform all of your work in your lab-1 git repository. Commit and push your assignment. Once you are ready to submit, create a release, tagged "lab-1." Unless you want to submit a different version of your code, leave it at “master” to release the most recent code that you’ve pushed to GitHub. Make sure that your name is specified somewhere in the release notes.
 
 Make sure that your released code includes all of your files and builds properly. You can do this by clicking to download the archive, and inspecting/trying to build it on your own machine/vm. There is no need to submit binaries/jar files (the target/ directory is purposely ignored from git).
