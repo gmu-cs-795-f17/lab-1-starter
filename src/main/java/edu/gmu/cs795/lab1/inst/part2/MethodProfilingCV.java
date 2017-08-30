@@ -21,7 +21,8 @@ public class MethodProfilingCV extends ClassVisitor {
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 		//Insert our method visitor in the chain
-		mv = new MethodProfilingMV(className, name, desc, mv);
+		if(className.startsWith("edu/gmu/cs795/lab1/test"))
+			mv = new MethodProfilingMV(className, name, desc, mv);
 		return mv; 
 	}
 }
